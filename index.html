@@ -10,36 +10,164 @@ class: center, middle, inverse
 saurabh-kumar.com/mocking
 
 ---
-## What is mocking and why use it?
+layout: false
+class: middle
+.pull-left[
+![](img/test-your-code.jpg)
+]
+.pull-right[
+## Testing
+- Prevent bugs
+- Prevent regressions
+- If not crucial, it's important
+]
+???
+- this talk going to include a lot of tests
+- If not crucial atleast important. 
+- unit tests, integration tests, or any brand new test.
+- defend us against bugs
+- save us during regressions
+- and save us from going to office on weekends.
 ---
-layout:false
+class: center, middle, inverse
+# Let's Begin, Part 1
+???
+- Let's begin with our journey
+- understand few things about mock
+- and how to use it
+---
+class: center, middle, inverse
+# Mock simulates <br><br>.red[the looks and behaviour] of real objects.
+???
+- Mocking means creating objects 
+- that simulates the looks and behaviour of real objects.
+- in real world, test can include a lot of complexity
+- and dependencies
+- In order to isolate the object we can mock all the other real objects
+---
+class: center, middle
+![](img/mock-eg1.png)
+---
+class: center, middle
+.pull-left[
+## Real
+![](img/mock-eg2.2.png)
+]
+.pull-right[
+## Mock
+![](img/mock-eg2.1.png)
+]
+???
+- lost a hell lot of gadgets
+- 2nd, it can't cut, it's fake
+- As with all the analogies, they are very easy to understand 
+- but they are not 100% accurate.
+---
+class: center, middle, inverse
+# Mocks != Stub
+???
+- might heard words like dummies, fakes, stubs
+- They are somewhat similar in a way
+---
+class: middle
+## Stubs
+refers to writing classes or functions but not yet implementing them or have a predetermined behaviour.
+```
+class Foo(object):
+  def bar(self):
+    pass
+
+  def tank(self):
+    return 'bla bla bla'
+```
+???
+- stubs refers to writing classes or functions but not yet implementing them or have a predetermined behaviour.
+- Stub is simple fake object. It just makes sure test runs smoothly.
+- Mock is smarter stub. You verify Your test passes through it.
+---
+class: middle
+.pull-left[
+## Stubs
+- Setup
+- Test
+- Verify State
+- TearDown
+]
+.pull-right[
+]
+---
+class: middle
+.pull-left[
+## Stubs
+- Setup
+- Test
+- Verify State
+- TearDown
+]
+.pull-right[
+## Mocks
+- Setup
+- .red[Setup Expectations]
+- Test
+- .red[Verify Expectations]
+- Verify State
+- TearDown
+]
+---
+class: middle
+# Mock
+```python
+>>> from mock import Mock
+>>> m = Mock()
+>>> m.foo = 1
+>>> m.foo
+1
+>>> m.bar
+<Mock name='mock.bar' id='4593003768'>
+```
+---
+## Good Mocks
+---
 .left-column[
-## What is it?
+## Good Mocks
 ]
 .right-column[
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat accusantium suscipit eos perferendis explicabo facilis aperiam rerum et facere corrupti quibusdam dolorum consequatur, mollitia quisquam ipsa sapiente qui accusamus esse?
+## System calls
+```python
+with patch.dict('os.environ', {'ANDROID_ARGS': ''}):
+  pf = Platform()
+  self.AssertTrue(pf == 'Android')
+```
 ]
 ---
-.left-column[
-  ## What is it?
-  ## Why use it?
-]
-.right-column[
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic possimus laborum recusandae sit nesciunt officiis saepe! Ea possimus quis molestiae vero quasi
+## Streams
+```python
+@mock.patch('sys.stdout', new_callable=six.StringIO)
+def test_print_live_refs_empty(self, stdout):
+  trackref.print_live_ref()
+  self.assertEqual(stdout.getvalue(), 'Live References\n\n\n')
+```
+---
+## Networking
+```python
+@patch('sys.stdout', new_callable=six.StringIO)
+def test_print_live_refs_empty(self, stdout):
+  trackref.print_live_ref()
+  self.assertEqual(stdout.getvalue(), 'Live References\n\n\n')
+```
+---
+## IO operations
+---
+## Clocks, time, timezones
 
-- Lorem ipsum dolor sit amet, 
-
-- consectetur adipisicing elit. 
-
-- Quam deleniti omnis aliquam, maiores s
-
-- ed sint voluptatibus dolores architecto incidunt culpa autem, voluptas perferendis consequuntur odit blanditiis, ut itaque temporibus doloribus.
-
-Then remark might be perfect for your next.red[*] slideshow!
-
-.footnote[.red[*] You probably want to convert existing slideshows as well]
-]
 </textarea>
 <script src='js/remark.lastest.min.js'></script>
-<script> var slideshow = remark.create();</script>
+<script> 
+var hljs = remark.highlighter.engine;
+var slideshow = remark.create({
+    highlightStyle: 'monokai',
+    highlightLanguage: 'remark',
+    highlightLines: true
+  }) ;
+</script>
 </body></html>
