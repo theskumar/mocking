@@ -298,6 +298,66 @@ class: middle
 - Exclude external dependencies
 ---
 class: middle, center, inverse
+## Moving on: Part 3
+# Bad Mocks
+---
+class: middle
+# Problems?
+```
+with patch.object(Pony, 'save_base') as mock_save:
+  form = PonyForm(instance=pony, data=data)
+  self.assertTrue(form.is_valid())
+
+  save_pony = form.save()
+  self.assertTrue(saved_pony.age, 3)
+  mock_save.assert_called_once()
+```
+---
+class: middle
+# Problems?
+```
+with patch.object(Pony, 'save_base') as mock_save:
+  form = PonyForm(instance=pony, data=data)
+  self.assertTrue(form.is_valid())
+
+  save_pony = form.save()
+  self.assertEqual(saved_pony.age, 3)
+  mock_save.assert_called_once()
+```
+## .red[`self.assertEqual(saved_pony.age, 3)`]
+---
+class: middle
+# Problems?
+```
+with patch.object(Pony, 'save_base') as mock_save:
+  form = PonyForm(instance=pony, data=data)
+  self.assertTrue(form.is_valid())
+
+  save_pony = form.save()
+  self.assertEqual(saved_pony.age, 3)
+  mock_save.make_me_sandwich()
+```
+## .red[`mock_save.make_me_sandwich()`]
+---
+class: middle
+# Problems?
+```
+with patch.object(Pony, 'save_base') as mock_save:
+  form = PonyForm(instance=pony, data=data)
+  self.assertTrue(form.is_valid())
+
+  save_pony = form.save()
+  self.assertEqual(saved_pony.age, 3)
+  self.assertEqual(mock_save.call_count, 1)
+```
+### `self.assertEqual(mock_save.call_count, 1)`
+???
+Correct one, from the documentation.
+---
+class: middle, centre
+![](img/arch.png)
+---
+class: middle, center, inverse
 ## Thank You
 ### Saurabh Kumar /  @_theskumar
 [Questions?]
