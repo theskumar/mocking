@@ -36,6 +36,7 @@
     max-width: 100%;
   }
   .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+  .remark-code {font-size: 22px;}
   .remark-code-line-highlighted     { background-color: #373832; }
   .pull-left {
     float: left;

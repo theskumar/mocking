@@ -115,9 +115,22 @@ class: middle
 ]
 ---
 class: middle
+## unitest.mock &nbsp;&nbsp;&nbsp;.grey[`# python 3.3`]
+## mock &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.grey[`# python 2.x`]
+???
+- Both the packages same on both the version
+- Developed by Michal Foord, who was also at Python India 2014
+---
+class: center, middle, inverse
+# Mock()
+???
+- mock has well documented 
+- can fake any property or behaviour
+---
+class: middle
 # Mock
 ```python
->>> from mock import Mock
+>>> from unittest.mock import Mock
 >>> m = Mock()
 >>> m.foo = 1
 >>> m.foo
@@ -126,39 +139,168 @@ class: middle
 <Mock name='mock.bar' id='4593003768'>
 ```
 ---
-## Good Mocks
+class: center, middle, inverse
+# Mock()
+# MagicMock()
 ---
-.left-column[
-## Good Mocks
+class: middle
+## MagicMock
+Similar to mock but has default implementation for magic methods:
+<pre>
+__lt__         __str__
+__gt__         __init__
+__len__        __hash__
+__bool__       __exit__
+...
+</pre>
+
+```python
+>>> from unittest.mock import MagicMock
+>>> m = MagicMock()
+>>> len(m)  # or m.__len__()
+0
+```
+---
+class: center, middle, inverse
+# Mock()
+# MagicMock()
+# patch()
+---
+class: middle
+# Patching
+```python
+from unittest.mock import patch
+
+with patch('pydelhi.conference.send_sms') as sms_sender_mock:
+  sms_sender_mock.return_value = True
+```
+???
+- path to module/object as string
+---
+class: middle
+# Patching
+
+## .red[`'pydelhi.conference.send_sms'`]
+point to place with object was used rather than where it's defined
+
+.pull-left[
+```
+## sms.py
+
+def send_sms(phone, text):
+   pass
+```
 ]
-.right-column[
-## System calls
+.pull-right[
+```
+## pydelhi/conference.py
+
+from sms import send_sms
+send_sms('...', '...')
+```
+]
+???
+- key to patching is point to place with object was used rather than where it's defined
+---
+class: center, middle, inverse
+# Mock the object .red[where it's used] <br><br>not .red[where it came from]
+---
+class: center, middle, inverse
+# Let's Move on: Part 2
+---
+class: center, middle, inverse
+# Useful Mocks
+## Typical use-cases where mocks are useful
+---
+class: middle
+# System calls
 ```python
 with patch.dict('os.environ', {'ANDROID_ARGS': ''}):
   pf = Platform()
   self.AssertTrue(pf == 'Android')
 ```
-]
+.footnote[source: kivy]
 ---
-## Streams
+class: middle
+# Streams
 ```python
 @mock.patch('sys.stdout', new_callable=six.StringIO)
 def test_print_live_refs_empty(self, stdout):
   trackref.print_live_ref()
   self.assertEqual(stdout.getvalue(), 'Live References\n\n\n')
 ```
+.footnote[source: Scrapy]
+
 ---
-## Networking
+class: middle
+# Networking
 ```python
-@patch('sys.stdout', new_callable=six.StringIO)
-def test_print_live_refs_empty(self, stdout):
-  trackref.print_live_ref()
-  self.assertEqual(stdout.getvalue(), 'Live References\n\n\n')
+@patch('django.utils.six.moves.urllib.request.urlopen')
+def test_oembed_photo_request(self, urlopen):
+  urlopen.return_value = self.dummy_response
+  result = wagtail_oembed("http://www.youtube.com/watch/")
+  self.assertEqual(result['type'], 'photo')
 ```
+.footnote[source: Wagtail]
 ---
+class: middle
 ## IO operations
+
+```python
+@patch.object(DataLoader, '_get_file_contents')
+def test_parse_json_from_file(self, mock_def):
+  mock_def.return_value = ({"a": 1, "b": 2}, True)
+  output = self._loader.load_from_file('dummy_json.txt')
+  self.assertEqual(output, dict(a=1, b=2))
+```
+
+.footnote[Source: Ansible]
 ---
+class: middle
 ## Clocks, time, timezones
+```
+@mock.patch('time.sleep')
+def test_500_retry(self, sleep_mock):
+  self.set_http_response(status_code=500)
+
+  # Create a bucket, a key and a file
+  with self.assertRaises(BotoServerError):
+    k.send_file(fail_file)
+```
+
+.footnote[Source: Boto]
+---
+class: middle
+## Unpredictable results
+```
+with mock.patch('random.random', return_value=0.0):
+  with self.assertChanges(get_timeline_size, before=10, after=5):
+    backend.add(timeline, next(self.records))
+
+```
+
+.footnote[Source: Sentry]
+---
+class: middle, center
+
+### system calls
+### streams
+### Networking
+### IO Operations
+### Clocks, time, timezones
+### Unpredictable results
+
+---
+class: middle
+# Why we like them?
+- Save time
+- Make impossible possible
+- Exclude external dependencies
+---
+class: middle, center, inverse
+## Thank You
+### Saurabh Kumar /  @_theskumar
+[Questions?]
 
 </textarea>
 <script src='js/remark.lastest.min.js'></script>
